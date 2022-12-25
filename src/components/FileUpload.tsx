@@ -1,17 +1,24 @@
 import "./FileUpload.css"
 import { useMessageContext } from "../context/MessageContext"
 
-function FileUpload({ setSelectedFiles }: { setSelectedFiles: any }) {
+type FileUploadProps = {
+  setSelectedFilesFun: (arr: any) => void
+}
+
+const FileUpload: React.FC<FileUploadProps> = (props) => {
   const imageSize = "2625339"
+  const { setSelectedFilesFun } = props
   const { notifyInfo, notifyError } = useMessageContext()
 
-  const handleImageUpload = (e: any) => {
-    const file = e.target.files[0]; // its for single file
-    if (!!/^image\//.test(file.type)) {
-      if (file.size < imageSize) {
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
+    const selectFile = files as FileList
+
+    if (!!/^image\//.test(selectFile[0].type)) {
+      if (selectFile[0].size < Number(imageSize)) {
         // console.log(e.target.files[0])
-        const newFiles = Object.values(e.target.files)
-        setSelectedFiles((prev: any) => [...prev, ...newFiles]);
+        const newFiles = Object.values(selectFile)
+        setSelectedFilesFun(newFiles);
         notifyInfo("Image uploaded successfully.")
       } else {
         notifyError("Upload less than 2mb size image");
