@@ -13,8 +13,8 @@ const App: React.FC = () => {
 
 
   const handleBtnClick = (e: any) => {
-    // const { EyeDropper } = window
-    const drop = new window.EyeDropper();
+    // @ts-ignore
+    const drop = new EyeDropper();
     const abortController = new AbortController();
 
     drop.open({ signal: abortController.signal }).then((res: any) => {
